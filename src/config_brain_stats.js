@@ -73,6 +73,9 @@ brain.stats.addRoot = function() {
     exec: {
       halt: Game.cpu.bucket < Game.cpu.tickLimit * 2
     },
+    memory: {
+      size: RawMemory.get().length
+    },
     gcl: {
       level: Game.gcl.level,
       progress: Game.gcl.progress,
@@ -102,9 +105,15 @@ brain.stats.addRoom = function(roomName, previousCpu) {
     energy: {
       available: room.energyAvailable,
       capacity: room.energyCapacityAvailable,
-      sources: _.sum(_.map(room.find(FIND_SOURCES), 'energy'))
+      sources: _.sum(_.map(room.find(FIND_SOURCES), 'energy')),
+      sourceStats: _.reduce(room.find(FIND_SOURCES), (acc, source) => {
+        acc[source.id] = { energy: source.energy, ttl: source.ticksToRegeneration };
+        return acc;
+      }, {})
     },
+    storage: _.get(room, 'storage.store', {}),
     controller: {
+      level: room.controller.level,
       progress: room.controller.progress,
       preCalcSpeed: room.memory.upgraderUpgrade / (Game.time % 100),
       progressTotal: room.controller.progressTotal

@@ -2,6 +2,7 @@
   "esnext": true,
   "globals": {
     "Memory": false,
+    "RawMemory": false,
     "Game": false,
     "console": false,
     "require": false,
